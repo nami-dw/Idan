@@ -8,38 +8,44 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <style>
     :root{
-      --bg1:#0f172a; --bg2:#1e293b; --text:#f8fafc; --muted:#cbd5e1;
-      --accent:#f59e0b; --accent2:#22d3ee;
+      --bg1:#0f172a; --text:#f8fafc; --muted:#cbd5e1;
+      --accent:#f59e0b; --ring:#22d3ee;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial;
-      color:var(--text);
-      background: radial-gradient(1200px 800px at 10% 10%, #1f2937, transparent 60%), radial-gradient(900px 600px at 90% 30%, #0ea5a4, transparent 50%), var(--bg1);
-      transition: background 1.2s ease;
-      overflow-x:hidden;
-    }
-    /* Background aurora aktif setelah action */
-    body.aurora{
+      color:var(--text); background:#0f172a; overflow-x:hidden; transition:background 1.2s ease;
       background:
-        radial-gradient(1200px 800px at 10% 10%, rgba(99,102,241,.25), transparent 60%),
-        radial-gradient(900px 600px at 90% 30%, rgba(34,211,238,.25), transparent 50%),
-        linear-gradient(115deg, #0b1220 0%, #0f172a 30%, #111827 100%);
-      background-attachment: fixed;
+        radial-gradient(1200px 800px at 10% 10%, #1f2937 0%, transparent 60%),
+        radial-gradient(900px 600px at 90% 30%, #0ea5a4 0%, transparent 50%),
+        #0f172a;
     }
-    .container{max-width:1000px;margin:0 auto;padding:22px}
+    /* aktif setelah tombol ditekan */
+    body.aurora{
+      background-size:400% 400%;
+      animation: aurora 16s ease-in-out infinite;
+      background:
+        linear-gradient(120deg, #0b1220, #1f2937, #0ea5a4, #6366f1, #111827);
+    }
+    @keyframes aurora {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    .container{max-width:1000px;margin:0 auto;padding:20px}
     .hero{
-      border:1px solid #1f2937; border-radius:18px; padding:26px;
-      background:linear-gradient(180deg, #0b1220cc, #0b1220cc), url('https://images.unsplash.com/photo-1526045431048-21f2f7f5d8a0?q=80&w=1600&auto=format&fit=crop');
+      border:1px solid #1f2937; border-radius:18px; padding:26px; text-align:center;
+      background:linear-gradient(180deg, #0b1220cc, #0b1220cc),
+        url('https://images.unsplash.com/photo-1526045431048-21f2f7f5d8a0?q=80&w=1600&auto=format&fit=crop');
       background-size:cover;background-position:center; box-shadow:0 20px 60px #0006;
-      text-align:center;
     }
-    h1{font-size: clamp(28px, 6vw, 52px); margin:6px 0 10px; line-height:1.1}
-    p.lead{color:var(--muted); margin:6px 0 14px; font-size:clamp(14px,2.5vw,18px)}
+    h1{font-size: clamp(28px, 6vw, 52px); margin:6px 0 8px}
+    p.lead{color:var(--muted); margin:6px 0 16px; font-size:clamp(14px,2.5vw,18px)}
     .countdown{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; align-items:center}
     .timebox{
-      background:#0b1220; border:1px solid #1f2937; border-radius:12px; padding:10px 12px; min-width:90px; text-align:center
+      background:#0b1220; border:1px solid #1f2937; border-radius:12px; padding:10px 12px; min-width:86px; text-align:center
     }
     .timebox div{font-size:26px; font-weight:800}
     .timebox small{display:block; color:#94a3b8}
@@ -49,31 +55,34 @@
       transition: transform .08s ease, box-shadow .2s, background .2s;
       box-shadow:0 6px 20px #f59e0b55;
     }
-    .btn:hover{transform: translateY(-1px)}
+    .btn:disabled{opacity:.65; cursor:not-allowed}
+    .btn:hover:not(:disabled){transform: translateY(-1px)}
+
     .grid{display:grid; gap:12px; grid-template-columns: repeat(2,1fr); margin-top:18px}
     @media(min-width:720px){ .grid{grid-template-columns: repeat(3,1fr);} }
     .imgwrap{position:relative; border-radius:12px; overflow:hidden; border:1px solid #1f2937}
-    .imgwrap img{width:100%; display:block; transform: translateY(12px); opacity:0}
-    /* animasi foto saat reveal */
+    .imgwrap img{width:100%; display:block; transform: translateY(14px) scale(.98); opacity:0}
     .imgwrap.revealed img{animation: popin .7s ease forwards}
-    @keyframes popin{to{opacity:1; transform: translateY(0)}}
-    footer{opacity:.7; font-size:12px; margin-top:14px; text-align:center}
+    @keyframes popin{to{opacity:1; transform: translateY(0) scale(1)}}
+
+    footer{opacity:.75; font-size:12px; margin-top:14px; text-align:center}
 
     /* Modal pesan cinta */
     .modal-backdrop{
       position:fixed; inset:0; background:#0009; display:none; align-items:center; justify-content:center; padding:16px; z-index:50
     }
     .modal{background:#0b1220; border:1px solid #1f2937; border-radius:16px; max-width:640px; width:100%; padding:20px; box-shadow:0 30px 80px #000c}
-    .modal h3{margin:0 0 8px; font-size:26px}
+    .modal h3{margin:0 0 10px; font-size:26px}
     .modal p{color:#e5e7eb; line-height:1.6}
     .modal .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:14px}
     .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px; color:#94a3b8}
+    .modal .btn{background:#22d3ee;color:#002126;border-color:#155e75}
 
-    /* Tombol audio kecil */
+    /* Kontrol Audio */
     .pill{
       position:fixed; bottom:16px; right:16px; z-index:40;
       background:#0b1220d9; border:1px solid #1f2937; color:#e2e8f0; padding:8px 12px; border-radius:999px;
-      display:flex; align-items:center; gap:8px
+      display:none; align-items:center; gap:8px
     }
     .pill button{background:#16a34a; color:#001b0d; border:1px solid #065f46; padding:6px 10px; border-radius:999px; cursor:pointer}
     .pill button.stop{background:#ef4444; border-color:#991b1b; color:#220000}
@@ -84,7 +93,7 @@
     <section class="hero">
       <h1 id="headline">Selamat Ulang Tahun! 🎂</h1>
       <p class="lead" id="subtext">Hitung mundur menuju harimu yang spesial...</p>
-      <div class="countdown" id="countdown">
+      <div class="countdown">
         <div class="timebox"><div id="d">0</div><small>Hari</small></div>
         <div class="timebox"><div id="h">0</div><small>Jam</small></div>
         <div class="timebox"><div id="m">0</div><small>Menit</small></div>
@@ -95,7 +104,7 @@
 
     <section>
       <div class="grid" id="gallery">
-        <!-- Ganti dengan foto kalian -->
+        <!-- Ganti URL berikut dengan foto kalian -->
         <div class="imgwrap"><img alt="Kenangan 1" src="https://images.unsplash.com/photo-1541534412932-bb4c389b3c0f?q=80&w=1200&auto=format&fit=crop"></div>
         <div class="imgwrap"><img alt="Kenangan 2" src="https://images.unsplash.com/photo-1520975922284-7b683db8ee2a?q=80&w=1200&auto=format&fit=crop"></div>
         <div class="imgwrap"><img alt="Kenangan 3" src="https://images.unsplash.com/photo-1546549039-49f6b90b1b06?q=80&w=1200&auto=format&fit=crop"></div>
@@ -119,32 +128,31 @@
       </p>
       <div class="actions">
         <span class="kbd">Tekan <b>Esc</b> untuk menutup</span>
-        <button class="btn" id="closeModalBtn" style="background:#22d3ee;color:#002126;border-color:#155e75">Tutup</button>
+        <button class="btn" id="closeModalBtn">Tutup</button>
       </div>
     </div>
   </div>
 
   <!-- Kontrol Audio -->
-  <div class="pill" id="audioPill" style="display:none">
-    <span id="songName">🎶 Lagu: (diputar)</span>
+  <div class="pill" id="audioPill">
+    <span id="songName">🎶 Lagu: diputar</span>
     <button id="stopBtn" class="stop">Stop</button>
   </div>
 
-  <!-- Confetti -->
+  <!-- Library Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
-    // ====== SETTING YANG KAMU EDIT ======
-    // 1) Tanggal ultah (ganti sesuai kebutuhan)
+    // ====== EDIT BAGIAN INI SAJA ======
+    // 1) Tanggal ultah:
     const TARGET_DATE = new Date("2025-09-20T00:00:00");
-    // 2) Pesan cinta (untuk modal)
+    // 2) Pesan cinta (untuk modal):
     const PERSONAL_MESSAGE = `Terima kasih sudah jadi rumah yang hangat buat hati aku.
 Doaku sederhana: semoga kamu sehat, bahagia, dan semua mimpimu dimudahkan.
 Hari ini tentang kamu—dan aku selalu bangga punya kamu. 💫`;
-    // 3) Lagu favorit (URL relatif di repo atau link langsung)
-    //    Contoh: upload file "lagu.mp3" ke repo, lalu set: const SONG_SRC = "lagu.mp3";
-    const SONG_SRC = "https://cdn.pixabay.com/download/audio/2021/10/26/audio_c7d4b5f4ce.mp3?filename=memories-piano-ambient-9835.mp3"; // bebas diganti
+    // 3) Lagu favorit (upload "lagu.mp3" ke repo atau pakai URL lain):
+    const SONG_SRC = "lagu.mp3"; // ganti sesuai file kamu (contoh: "lagu.mp3")
 
-    // ====== Logika Halaman ======
+    // ====== LOGIKA HALAMAN ======
     // Countdown
     const d = document.getElementById("d"),
           h = document.getElementById("h"),
@@ -175,34 +183,27 @@ Hari ini tentang kamu—dan aku selalu bangga punya kamu. 💫`;
     function openModal(){
       loveMessage.textContent = PERSONAL_MESSAGE;
       modalBackdrop.style.display = "flex";
-      // Fokus ke tombol untuk aksesibilitas
       setTimeout(()=>closeModalBtn.focus(), 50);
     }
-    function closeModal(){
-      modalBackdrop.style.display = "none";
-    }
+    function closeModal(){ modalBackdrop.style.display = "none"; }
     closeModalBtn.addEventListener("click", closeModal);
     document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
     modalBackdrop.addEventListener("click",(e)=>{ if(e.target===modalBackdrop) closeModal(); });
 
-    // Audio (dipicu user gesture)
+    // Audio (via user gesture)
     let audio;
     const pill = document.getElementById("audioPill");
     const stopBtn = document.getElementById("stopBtn");
     const songName = document.getElementById("songName");
     function playSong(){
       try{
-        if(!audio){
-          audio = new Audio(SONG_SRC);
-          audio.loop = true;
-        }
+        if(!audio){ audio = new Audio(SONG_SRC); audio.loop = true; }
         audio.play().then(()=>{
           pill.style.display = "flex";
           songName.textContent = "🎶 Lagu: diputar";
-        }).catch(()=> {
-          // Jika autoplay gagal walau ada gesture (jarang), tampilkan hint
+        }).catch(()=>{
           pill.style.display = "flex";
-          songName.textContent = "🔈 Klik tombol 'Stop' lalu 'Buka Kejutan' lagi jika musik belum jalan";
+          songName.textContent = "🔈 Jika musik belum jalan, ketuk tombol lagi";
         });
       }catch(e){}
     }
@@ -211,32 +212,28 @@ Hari ini tentang kamu—dan aku selalu bangga punya kamu. 💫`;
       pill.style.display = "none";
     });
 
-    // Reveal galeri berurutan
+    // Galeri reveal
     const galleryItems = Array.from(document.querySelectorAll(".imgwrap"));
     function revealGallery(){
-      galleryItems.forEach((el,idx)=>{
-        setTimeout(()=> el.classList.add("revealed"), 200*idx);
-      });
+      galleryItems.forEach((el,idx)=> setTimeout(()=> el.classList.add("revealed"), 200*idx));
     }
 
-    // Action utama tombol
+    // Tombol utama
     const btn = document.getElementById("surpriseBtn");
     btn.addEventListener("click", () => {
-      // confetti beruntun
+      // Confetti beruntun
       let t = 0; for(let i=0;i<6;i++){ setTimeout(confettiBurst, t); t+=450; }
-      // ganti subteks
+      // Ubah teks & background
       document.getElementById("subtext").textContent = "Semoga harimu penuh bahagia 💕";
-      // buka modal pesan cinta
-      setTimeout(openModal, 600);
-      // animasi background
       document.body.classList.add("aurora");
-      // reveal foto
-      setTimeout(revealGallery, 300);
-      // putar musik
+      // Reveal foto & buka modal
+      setTimeout(revealGallery, 250);
+      setTimeout(openModal, 600);
+      // Musik
       playSong();
-      // disable tombol biar gak spam (opsional)
+      // Disable tombol
       btn.disabled = true; btn.textContent = "✨ Selamat menikmati";
     });
   </script>
 </body>
-      </html>
+</html>
