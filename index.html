@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎉 Surprise Ulang Tahun!</title>
+  <meta name="description" content="Surprise ulang tahun personal: confetti, pesan cinta, musik, dan galeri." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <style>
+    :root{
+      --bg1:#0f172a; --bg2:#1e293b; --text:#f8fafc; --muted:#cbd5e1;
+      --accent:#f59e0b; --accent2:#22d3ee;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial;
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 10% 10%, #1f2937, transparent 60%), radial-gradient(900px 600px at 90% 30%, #0ea5a4, transparent 50%), var(--bg1);
+      transition: background 1.2s ease;
+      overflow-x:hidden;
+    }
+    /* Background aurora aktif setelah action */
+    body.aurora{
+      background:
+        radial-gradient(1200px 800px at 10% 10%, rgba(99,102,241,.25), transparent 60%),
+        radial-gradient(900px 600px at 90% 30%, rgba(34,211,238,.25), transparent 50%),
+        linear-gradient(115deg, #0b1220 0%, #0f172a 30%, #111827 100%);
+      background-attachment: fixed;
+    }
+    .container{max-width:1000px;margin:0 auto;padding:22px}
+    .hero{
+      border:1px solid #1f2937; border-radius:18px; padding:26px;
+      background:linear-gradient(180deg, #0b1220cc, #0b1220cc), url('https://images.unsplash.com/photo-1526045431048-21f2f7f5d8a0?q=80&w=1600&auto=format&fit=crop');
+      background-size:cover;background-position:center; box-shadow:0 20px 60px #0006;
+      text-align:center;
+    }
+    h1{font-size: clamp(28px, 6vw, 52px); margin:6px 0 10px; line-height:1.1}
+    p.lead{color:var(--muted); margin:6px 0 14px; font-size:clamp(14px,2.5vw,18px)}
+    .countdown{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; align-items:center}
+    .timebox{
+      background:#0b1220; border:1px solid #1f2937; border-radius:12px; padding:10px 12px; min-width:90px; text-align:center
+    }
+    .timebox div{font-size:26px; font-weight:800}
+    .timebox small{display:block; color:#94a3b8}
+    .btn{
+      appearance:none; cursor:pointer; border:1px solid #334155; background:var(--accent); color:#2e1900; 
+      padding:12px 16px; border-radius:12px; font-weight:700; letter-spacing:0.2px; margin-left:6px;
+      transition: transform .08s ease, box-shadow .2s, background .2s;
+      box-shadow:0 6px 20px #f59e0b55;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .grid{display:grid; gap:12px; grid-template-columns: repeat(2,1fr); margin-top:18px}
+    @media(min-width:720px){ .grid{grid-template-columns: repeat(3,1fr);} }
+    .imgwrap{position:relative; border-radius:12px; overflow:hidden; border:1px solid #1f2937}
+    .imgwrap img{width:100%; display:block; transform: translateY(12px); opacity:0}
+    /* animasi foto saat reveal */
+    .imgwrap.revealed img{animation: popin .7s ease forwards}
+    @keyframes popin{to{opacity:1; transform: translateY(0)}}
+    footer{opacity:.7; font-size:12px; margin-top:14px; text-align:center}
+
+    /* Modal pesan cinta */
+    .modal-backdrop{
+      position:fixed; inset:0; background:#0009; display:none; align-items:center; justify-content:center; padding:16px; z-index:50
+    }
+    .modal{background:#0b1220; border:1px solid #1f2937; border-radius:16px; max-width:640px; width:100%; padding:20px; box-shadow:0 30px 80px #000c}
+    .modal h3{margin:0 0 8px; font-size:26px}
+    .modal p{color:#e5e7eb; line-height:1.6}
+    .modal .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:14px}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px; color:#94a3b8}
+
+    /* Tombol audio kecil */
+    .pill{
+      position:fixed; bottom:16px; right:16px; z-index:40;
+      background:#0b1220d9; border:1px solid #1f2937; color:#e2e8f0; padding:8px 12px; border-radius:999px;
+      display:flex; align-items:center; gap:8px
+    }
+    .pill button{background:#16a34a; color:#001b0d; border:1px solid #065f46; padding:6px 10px; border-radius:999px; cursor:pointer}
+    .pill button.stop{background:#ef4444; border-color:#991b1b; color:#220000}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1 id="headline">Selamat Ulang Tahun! 🎂</h1>
+      <p class="lead" id="subtext">Hitung mundur menuju harimu yang spesial...</p>
+      <div class="countdown" id="countdown">
+        <div class="timebox"><div id="d">0</div><small>Hari</small></div>
+        <div class="timebox"><div id="h">0</div><small>Jam</small></div>
+        <div class="timebox"><div id="m">0</div><small>Menit</small></div>
+        <div class="timebox"><div id="s">0</div><small>Detik</small></div>
+        <button class="btn" id="surpriseBtn">🎉 Buka Kejutan</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="grid" id="gallery">
+        <!-- Ganti dengan foto kalian -->
+        <div class="imgwrap"><img alt="Kenangan 1" src="https://images.unsplash.com/photo-1541534412932-bb4c389b3c0f?q=80&w=1200&auto=format&fit=crop"></div>
+        <div class="imgwrap"><img alt="Kenangan 2" src="https://images.unsplash.com/photo-1520975922284-7b683db8ee2a?q=80&w=1200&auto=format&fit=crop"></div>
+        <div class="imgwrap"><img alt="Kenangan 3" src="https://images.unsplash.com/photo-1546549039-49f6b90b1b06?q=80&w=1200&auto=format&fit=crop"></div>
+        <div class="imgwrap"><img alt="Kenangan 4" src="https://images.unsplash.com/photo-1526404802139-cb6ae21692b9?q=80&w=1200&auto=format&fit=crop"></div>
+        <div class="imgwrap"><img alt="Kenangan 5" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop"></div>
+        <div class="imgwrap"><img alt="Kenangan 6" src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1200&auto=format&fit=crop"></div>
+      </div>
+    </section>
+
+    <footer>Untukmu, dari aku — semoga hari ini penuh tawa dan doa baik 💙</footer>
+  </div>
+
+  <!-- Modal Pesan Cinta -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="titleModal">
+    <div class="modal" role="document">
+      <h3 id="titleModal">Ada yang ingin aku bilang…</h3>
+      <p id="loveMessage">
+        Terima kasih sudah jadi rumah yang hangat buat hati aku.  
+        Doaku sederhana: semoga kamu sehat, bahagia, dan semua mimpimu dimudahkan.  
+        Hari ini tentang kamu—dan aku selalu bangga punya kamu. 💫
+      </p>
+      <div class="actions">
+        <span class="kbd">Tekan <b>Esc</b> untuk menutup</span>
+        <button class="btn" id="closeModalBtn" style="background:#22d3ee;color:#002126;border-color:#155e75">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kontrol Audio -->
+  <div class="pill" id="audioPill" style="display:none">
+    <span id="songName">🎶 Lagu: (diputar)</span>
+    <button id="stopBtn" class="stop">Stop</button>
+  </div>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    // ====== SETTING YANG KAMU EDIT ======
+    // 1) Tanggal ultah (ganti sesuai kebutuhan)
+    const TARGET_DATE = new Date("2025-09-20T00:00:00");
+    // 2) Pesan cinta (untuk modal)
+    const PERSONAL_MESSAGE = `Terima kasih sudah jadi rumah yang hangat buat hati aku.
+Doaku sederhana: semoga kamu sehat, bahagia, dan semua mimpimu dimudahkan.
+Hari ini tentang kamu—dan aku selalu bangga punya kamu. 💫`;
+    // 3) Lagu favorit (URL relatif di repo atau link langsung)
+    //    Contoh: upload file "lagu.mp3" ke repo, lalu set: const SONG_SRC = "lagu.mp3";
+    const SONG_SRC = "https://cdn.pixabay.com/download/audio/2021/10/26/audio_c7d4b5f4ce.mp3?filename=memories-piano-ambient-9835.mp3"; // bebas diganti
+
+    // ====== Logika Halaman ======
+    // Countdown
+    const d = document.getElementById("d"),
+          h = document.getElementById("h"),
+          m = document.getElementById("m"),
+          s = document.getElementById("s");
+    function updateCountdown(){
+      const now = new Date();
+      const diff = TARGET_DATE - now;
+      if(diff<=0){ d.textContent=h.textContent=m.textContent=s.textContent=0; return;}
+      d.textContent=Math.floor(diff/(1000*60*60*24));
+      h.textContent=Math.floor((diff/(1000*60*60))%24);
+      m.textContent=Math.floor((diff/(1000*60))%60);
+      s.textContent=Math.floor((diff/1000)%60);
+    }
+    setInterval(updateCountdown,1000); updateCountdown();
+
+    // Confetti sequence
+    function confettiBurst(){
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      confetti({ particleCount: 60, angle: 60, spread: 55, origin: { x: 0 } });
+      confetti({ particleCount: 60, angle: 120, spread: 55, origin: { x: 1 } });
+    }
+
+    // Modal
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const loveMessage = document.getElementById("loveMessage");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    function openModal(){
+      loveMessage.textContent = PERSONAL_MESSAGE;
+      modalBackdrop.style.display = "flex";
+      // Fokus ke tombol untuk aksesibilitas
+      setTimeout(()=>closeModalBtn.focus(), 50);
+    }
+    function closeModal(){
+      modalBackdrop.style.display = "none";
+    }
+    closeModalBtn.addEventListener("click", closeModal);
+    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
+    modalBackdrop.addEventListener("click",(e)=>{ if(e.target===modalBackdrop) closeModal(); });
+
+    // Audio (dipicu user gesture)
+    let audio;
+    const pill = document.getElementById("audioPill");
+    const stopBtn = document.getElementById("stopBtn");
+    const songName = document.getElementById("songName");
+    function playSong(){
+      try{
+        if(!audio){
+          audio = new Audio(SONG_SRC);
+          audio.loop = true;
+        }
+        audio.play().then(()=>{
+          pill.style.display = "flex";
+          songName.textContent = "🎶 Lagu: diputar";
+        }).catch(()=> {
+          // Jika autoplay gagal walau ada gesture (jarang), tampilkan hint
+          pill.style.display = "flex";
+          songName.textContent = "🔈 Klik tombol 'Stop' lalu 'Buka Kejutan' lagi jika musik belum jalan";
+        });
+      }catch(e){}
+    }
+    stopBtn.addEventListener("click",()=>{
+      if(audio){ audio.pause(); audio.currentTime = 0; }
+      pill.style.display = "none";
+    });
+
+    // Reveal galeri berurutan
+    const galleryItems = Array.from(document.querySelectorAll(".imgwrap"));
+    function revealGallery(){
+      galleryItems.forEach((el,idx)=>{
+        setTimeout(()=> el.classList.add("revealed"), 200*idx);
+      });
+    }
+
+    // Action utama tombol
+    const btn = document.getElementById("surpriseBtn");
+    btn.addEventListener("click", () => {
+      // confetti beruntun
+      let t = 0; for(let i=0;i<6;i++){ setTimeout(confettiBurst, t); t+=450; }
+      // ganti subteks
+      document.getElementById("subtext").textContent = "Semoga harimu penuh bahagia 💕";
+      // buka modal pesan cinta
+      setTimeout(openModal, 600);
+      // animasi background
+      document.body.classList.add("aurora");
+      // reveal foto
+      setTimeout(revealGallery, 300);
+      // putar musik
+      playSong();
+      // disable tombol biar gak spam (opsional)
+      btn.disabled = true; btn.textContent = "✨ Selamat menikmati";
+    });
+  </script>
+</body>
+      </html>
