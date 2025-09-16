@@ -1,238 +1,261 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>🎉 Surprise Ulang Tahun!</title>
-  <meta name="description" content="Surprise ulang tahun personal: confetti, pesan cinta, musik, dan galeri." />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <style>
-    :root{
-      --bg1:#0f172a; --text:#f8fafc; --muted:#cbd5e1;
-      --accent:#f59e0b; --ring:#22d3ee;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial;
-      color:var(--text); background:#0f172a; overflow-x:hidden; transition:background 1.2s ease;
-      background:
-        radial-gradient(1200px 800px at 10% 10%, #1f2937 0%, transparent 60%),
-        radial-gradient(900px 600px at 90% 30%, #0ea5a4 0%, transparent 50%),
-        #0f172a;
-    }
-    /* aktif setelah tombol ditekan */
-    body.aurora{
-      background-size:400% 400%;
-      animation: aurora 16s ease-in-out infinite;
-      background:
-        linear-gradient(120deg, #0b1220, #1f2937, #0ea5a4, #6366f1, #111827);
-    }
-    @keyframes aurora {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🎁 Ada sesuatu buat kamu</title>
+<style>
+  :root{
+    --txt:#eaf6ff; --muted:#cfe8ff; --btn:#38bdf8;
+  }
 
-    .container{max-width:1000px;margin:0 auto;padding:20px}
-    .hero{
-      border:1px solid #1f2937; border-radius:18px; padding:26px; text-align:center;
-      background:linear-gradient(180deg, #0b1220cc, #0b1220cc),
-        url('https://images.unsplash.com/photo-1526045431048-21f2f7f5d8a0?q=80&w=1600&auto=format&fit=crop');
-      background-size:cover;background-position:center; box-shadow:0 20px 60px #0006;
-    }
-    h1{font-size: clamp(28px, 6vw, 52px); margin:6px 0 8px}
-    p.lead{color:var(--muted); margin:6px 0 16px; font-size:clamp(14px,2.5vw,18px)}
-    .countdown{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; align-items:center}
-    .timebox{
-      background:#0b1220; border:1px solid #1f2937; border-radius:12px; padding:10px 12px; min-width:86px; text-align:center
-    }
-    .timebox div{font-size:26px; font-weight:800}
-    .timebox small{display:block; color:#94a3b8}
-    .btn{
-      appearance:none; cursor:pointer; border:1px solid #334155; background:var(--accent); color:#2e1900; 
-      padding:12px 16px; border-radius:12px; font-weight:700; letter-spacing:0.2px; margin-left:6px;
-      transition: transform .08s ease, box-shadow .2s, background .2s;
-      box-shadow:0 6px 20px #f59e0b55;
-    }
-    .btn:disabled{opacity:.65; cursor:not-allowed}
-    .btn:hover:not(:disabled){transform: translateY(-1px)}
+  /* ===== Aurora biru-ungu dinamis (anti solid) ===== */
+  html,body{height:100%}
+  body{
+    margin:0; padding:0 12px; overflow-x:hidden;
+    font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+    color:var(--txt); text-align:center;
+    /* tiga blob radial + canvas navy di bawah */
+    background:
+      radial-gradient(60vmax 60vmax at 20% 30%, #1e3a8acc, transparent 60%),
+      radial-gradient(60vmax 60vmax at 80% 20%, #2563ebcc, transparent 60%),
+      radial-gradient(60vmax 60vmax at 50% 80%, #4f46e5cc, transparent 60%),
+      #0a1022;
+    background-size:200% 200%;
+    animation:auroraMove 16s ease-in-out infinite;
+  }
+  @keyframes auroraMove {
+    0%   {background-position: 0% 50%;}
+    50%  {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+  /* grain tipis biar halus */
+  body::after{
+    content:""; position:fixed; inset:-1px; z-index:-1; pointer-events:none;
+    background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAPUlEQVR42u3PMQEAIAzAsJv/0yQm2gTzq2kE2v0Hh9kBAAAAAAAAAIC3xk2m73kq4c8g1d6f2Lw8Y2g0Gg0AAAAA4A9q1w2f7y7iAAPzv2sAAAAASUVORK5CYII=");
+    opacity:.06; mix-blend-mode:soft-light; image-rendering:pixelated;
+  }
 
-    .grid{display:grid; gap:12px; grid-template-columns: repeat(2,1fr); margin-top:18px}
-    @media(min-width:720px){ .grid{grid-template-columns: repeat(3,1fr);} }
-    .imgwrap{position:relative; border-radius:12px; overflow:hidden; border:1px solid #1f2937}
-    .imgwrap img{width:100%; display:block; transform: translateY(14px) scale(.98); opacity:0}
-    .imgwrap.revealed img{animation: popin .7s ease forwards}
-    @keyframes popin{to{opacity:1; transform: translateY(0) scale(1)}}
+  h1#headline{margin:22px 0 8px;font-size:clamp(22px,6.5vw,44px);text-shadow:0 2px 10px rgba(0,0,0,.7)}
+  #message{margin:6px 0 10px;font-size:clamp(14px,4.2vw,20px);color:var(--muted);text-shadow:0 1px 4px rgba(0,0,0,.6)}
 
-    footer{opacity:.75; font-size:12px; margin-top:14px; text-align:center}
+  .btn{
+    background:linear-gradient(180deg,#38bdf8,#17a5e0);
+    color:#06131b;font-weight:800;border:none;border-radius:14px;
+    padding:14px 20px;margin:14px auto 10px;cursor:pointer;
+    font-size:clamp(15px,4.4vw,18px);
+    display:inline-block;box-shadow:0 10px 28px rgba(56,189,248,.35), inset 0 -2px 0 #0e7fae
+  }
+  .btn:active{transform:translateY(1px)} .btn:disabled{opacity:.65;cursor:not-allowed}
 
-    /* Modal pesan cinta */
-    .modal-backdrop{
-      position:fixed; inset:0; background:#0009; display:none; align-items:center; justify-content:center; padding:16px; z-index:50
-    }
-    .modal{background:#0b1220; border:1px solid #1f2937; border-radius:16px; max-width:640px; width:100%; padding:20px; box-shadow:0 30px 80px #000c}
-    .modal h3{margin:0 0 10px; font-size:26px}
-    .modal p{color:#e5e7eb; line-height:1.6}
-    .modal .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:14px}
-    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px; color:#94a3b8}
-    .modal .btn{background:#22d3ee;color:#002126;border-color:#155e75}
+  /* 2 foto per slide */
+  .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px auto 22px;max-width:720px}
+  .gallery img{
+    width:100%;border-radius:14px;display:block;opacity:0;transform:scale(.96);
+    transition:opacity .45s ease,transform .45s ease,filter .3s;box-shadow:0 10px 24px rgba(0,0,0,.35)
+  }
+  .gallery img.show{opacity:1;transform:scale(1)}
+  .gallery img:hover{filter:brightness(1.07)}
+  footer{margin:18px 0 26px;color:#d6eaff;font-size:clamp(12px,3.5vw,14px);text-shadow:0 1px 4px rgba(0,0,0,.6)}
 
-    /* Kontrol Audio */
-    .pill{
-      position:fixed; bottom:16px; right:16px; z-index:40;
-      background:#0b1220d9; border:1px solid #1f2937; color:#e2e8f0; padding:8px 12px; border-radius:999px;
-      display:none; align-items:center; gap:8px
-    }
-    .pill button{background:#16a34a; color:#001b0d; border:1px solid #065f46; padding:6px 10px; border-radius:999px; cursor:pointer}
-    .pill button.stop{background:#ef4444; border-color:#991b1b; color:#220000}
-  </style>
+  /* Kontrol musik */
+  .pill{position:fixed;bottom:12px;right:12px;background:rgba(5,31,53,.9);
+    padding:8px 12px;border-radius:999px;border:1px solid #0b3356;
+    display:flex;gap:8px;align-items:center;backdrop-filter:blur(3px)}
+  .pill span{font-size:clamp(12px,3.5vw,14px);color:#cfe8ff}
+  .pill button{background:#22d3ee;border:1px solid #0e7490;color:#00242b;padding:6px 10px;border-radius:999px;font-weight:700}
+  .pill button.pause{background:#fca5a5;border-color:#b91c1c;color:#2b0000}
+  .pill[hidden]{display:none}
+
+  /* Finale headline glow */
+  .glow{font-size:clamp(22px,7vw,40px);color:#eaf6ff;text-shadow:
+    0 0 10px #7dd3fc, 0 0 24px #60a5fa, 0 0 36px #818cf8; animation:pulse 1.6s infinite alternate}
+  @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.08)}}
+
+  /* Balon afterparty */
+  .balloon{position:fixed;bottom:-60px;font-size:28px;animation:rise linear forwards;pointer-events:none;
+    filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+  @keyframes rise{to{transform:translateY(-120vh) rotate(-8deg);opacity:.9}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <section class="hero">
-      <h1 id="headline">Selamat Ulang Tahun! 🎂</h1>
-      <p class="lead" id="subtext">Hitung mundur menuju harimu yang spesial...</p>
-      <div class="countdown">
-        <div class="timebox"><div id="d">0</div><small>Hari</small></div>
-        <div class="timebox"><div id="h">0</div><small>Jam</small></div>
-        <div class="timebox"><div id="m">0</div><small>Menit</small></div>
-        <div class="timebox"><div id="s">0</div><small>Detik</small></div>
-        <button class="btn" id="surpriseBtn">🎉 Buka Kejutan</button>
-      </div>
-    </section>
+  <!-- Teaser (no spoiler) -->
+  <h1 id="headline">Psst… ada sesuatu buat kamu 😉</h1>
+  <p id="message">Tap tombol di bawah untuk mulai</p>
 
-    <section>
-      <div class="grid" id="gallery">
-        <!-- Ganti URL berikut dengan foto kalian -->
-        <div class="imgwrap"><img alt="Kenangan 1" src="https://images.unsplash.com/photo-1541534412932-bb4c389b3c0f?q=80&w=1200&auto=format&fit=crop"></div>
-        <div class="imgwrap"><img alt="Kenangan 2" src="https://images.unsplash.com/photo-1520975922284-7b683db8ee2a?q=80&w=1200&auto=format&fit=crop"></div>
-        <div class="imgwrap"><img alt="Kenangan 3" src="https://images.unsplash.com/photo-1546549039-49f6b90b1b06?q=80&w=1200&auto=format&fit=crop"></div>
-        <div class="imgwrap"><img alt="Kenangan 4" src="https://images.unsplash.com/photo-1526404802139-cb6ae21692b9?q=80&w=1200&auto=format&fit=crop"></div>
-        <div class="imgwrap"><img alt="Kenangan 5" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop"></div>
-        <div class="imgwrap"><img alt="Kenangan 6" src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1200&auto=format&fit=crop"></div>
-      </div>
-    </section>
+  <button id="surpriseBtn" class="btn">✨ Buka</button>
 
-    <footer>Untukmu, dari aku — semoga hari ini penuh tawa dan doa baik 💙</footer>
+  <!-- 2 foto per slide -->
+  <div class="gallery">
+    <img id="img1" alt="Foto 1" loading="lazy">
+    <img id="img2" alt="Foto 2" loading="lazy">
   </div>
 
-  <!-- Modal Pesan Cinta -->
-  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="titleModal">
-    <div class="modal" role="document">
-      <h3 id="titleModal">Ada yang ingin aku bilang…</h3>
-      <p id="loveMessage">
-        Terima kasih sudah jadi rumah yang hangat buat hati aku.  
-        Doaku sederhana: semoga kamu sehat, bahagia, dan semua mimpimu dimudahkan.  
-        Hari ini tentang kamu—dan aku selalu bangga punya kamu. 💫
-      </p>
-      <div class="actions">
-        <span class="kbd">Tekan <b>Esc</b> untuk menutup</span>
-        <button class="btn" id="closeModalBtn">Tutup</button>
-      </div>
-    </div>
+  <footer>Dari aku, untukmu 💙</footer>
+
+  <!-- Kontrol musik -->
+  <div class="pill" id="musicPill" hidden>
+    <span id="musicText">🎶 Musik diputar…</span>
+    <button id="musicToggle" class="pause">⏸️ Pause</button>
   </div>
 
-  <!-- Kontrol Audio -->
-  <div class="pill" id="audioPill">
-    <span id="songName">🎶 Lagu: diputar</span>
-    <button id="stopBtn" class="stop">Stop</button>
-  </div>
-
-  <!-- Library Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
-    // ====== EDIT BAGIAN INI SAJA ======
-    // 1) Tanggal ultah:
-    const TARGET_DATE = new Date("2025-09-20T00:00:00");
-    // 2) Pesan cinta (untuk modal):
-    const PERSONAL_MESSAGE = `Terima kasih sudah jadi rumah yang hangat buat hati aku.
-Doaku sederhana: semoga kamu sehat, bahagia, dan semua mimpimu dimudahkan.
-Hari ini tentang kamu—dan aku selalu bangga punya kamu. 💫`;
-    // 3) Lagu favorit (upload "lagu.mp3" ke repo atau pakai URL lain):
-    const SONG_SRC = "lagu.mp3"; // ganti sesuai file kamu (contoh: "lagu.mp3")
+    /* ===== KONTEN =====
+       Foto Google Drive:
+       - Share: Anyone with the link (Viewer)
+       - Format: https://drive.google.com/uc?export=view&id=FILE_ID&sz=w900
+    */
+    const slides = [
+  { 
+    text:"💙 Waktu kita jalan bareng",
+    photos:[
+      "./images/foto1.jpg",
+      "./images/foto2.jpg"
+    ]
+  },
+  { 
+    text:"🌸 Senyum kamu paling manis",
+    photos:[
+      "./images/foto3.jpg",
+      "./images/foto4.jpg"
+    ]
+  },
+  { 
+    text:"✨ Semoga bahagia selalu",
+    photos:[
+      "./images/foto5.jpg",
+      "./images/foto6.jpg"
+    ]
+  }
+];
 
-    // ====== LOGIKA HALAMAN ======
-    // Countdown
-    const d = document.getElementById("d"),
-          h = document.getElementById("h"),
-          m = document.getElementById("m"),
-          s = document.getElementById("s");
-    function updateCountdown(){
-      const now = new Date();
-      const diff = TARGET_DATE - now;
-      if(diff<=0){ d.textContent=h.textContent=m.textContent=s.textContent=0; return;}
-      d.textContent=Math.floor(diff/(1000*60*60*24));
-      h.textContent=Math.floor((diff/(1000*60*60))%24);
-      m.textContent=Math.floor((diff/(1000*60))%60);
-      s.textContent=Math.floor((diff/1000)%60);
-    }
-    setInterval(updateCountdown,1000); updateCountdown();
+    const SONG_SRC = "lagu.mp3"; // unggah/ganti dengan lagumu
 
-    // Confetti sequence
-    function confettiBurst(){
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      confetti({ particleCount: 60, angle: 60, spread: 55, origin: { x: 0 } });
-      confetti({ particleCount: 60, angle: 120, spread: 55, origin: { x: 1 } });
-    }
-
-    // Modal
-    const modalBackdrop = document.getElementById("modalBackdrop");
-    const loveMessage = document.getElementById("loveMessage");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    function openModal(){
-      loveMessage.textContent = PERSONAL_MESSAGE;
-      modalBackdrop.style.display = "flex";
-      setTimeout(()=>closeModalBtn.focus(), 50);
-    }
-    function closeModal(){ modalBackdrop.style.display = "none"; }
-    closeModalBtn.addEventListener("click", closeModal);
-    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
-    modalBackdrop.addEventListener("click",(e)=>{ if(e.target===modalBackdrop) closeModal(); });
-
-    // Audio (via user gesture)
-    let audio;
-    const pill = document.getElementById("audioPill");
-    const stopBtn = document.getElementById("stopBtn");
-    const songName = document.getElementById("songName");
-    function playSong(){
-      try{
-        if(!audio){ audio = new Audio(SONG_SRC); audio.loop = true; }
-        audio.play().then(()=>{
-          pill.style.display = "flex";
-          songName.textContent = "🎶 Lagu: diputar";
-        }).catch(()=>{
-          pill.style.display = "flex";
-          songName.textContent = "🔈 Jika musik belum jalan, ketuk tombol lagi";
-        });
-      }catch(e){}
-    }
-    stopBtn.addEventListener("click",()=>{
-      if(audio){ audio.pause(); audio.currentTime = 0; }
-      pill.style.display = "none";
-    });
-
-    // Galeri reveal
-    const galleryItems = Array.from(document.querySelectorAll(".imgwrap"));
-    function revealGallery(){
-      galleryItems.forEach((el,idx)=> setTimeout(()=> el.classList.add("revealed"), 200*idx));
-    }
-
-    // Tombol utama
+    /* ===== STATE ===== */
+    let idx = 0, afterpartyStarted = false;
     const btn = document.getElementById("surpriseBtn");
+    const msg = document.getElementById("message");
+    const headline = document.getElementById("headline");
+    const img1 = document.getElementById("img1");
+    const img2 = document.getElementById("img2");
+    const musicPill = document.getElementById("musicPill");
+    const musicText = document.getElementById("musicText");
+    const musicToggle = document.getElementById("musicToggle");
+    let audio, isPlaying = false;
+
+    // Preload foto
+    slides.flatMap(s=>s.photos).forEach(src=>{const im=new Image(); im.src=src;});
+
+    /* ===== Confetti: cepat, jatuh, variatif biru ===== */
+    const palettes = [
+      ["#38bdf8","#60a5fa","#818cf8","#a5b4fc"],
+      ["#22d3ee","#38bdf8","#0ea5e9","#0284c7"],
+      ["#7dd3fc","#93c5fd","#c7d2fe","#e0e7ff"],
+      ["#60a5fa","#fbbf24","#f59e0b","#38bdf8"]
+    ];
+    function burstVariant(){
+      const colors  = palettes[Math.floor(Math.random()*palettes.length)];
+      const scalar  = 0.9 + Math.random()*0.5;
+      const gravity = 1.35, decay=0.78, ticks=85, vel=52+Math.random()*18, drift=(Math.random()*0.8-0.4);
+      confetti({particleCount:120, startVelocity:vel, spread:75, origin:{y:0.6}, colors, scalar, gravity, decay, ticks, drift});
+      confetti({particleCount:70,  startVelocity:vel, angle:60,  spread:55, origin:{x:0.06,y:0.7}, colors, scalar, gravity, decay, ticks, drift});
+      confetti({particleCount:70,  startVelocity:vel, angle:120, spread:55, origin:{x:0.94,y:0.7}, colors, scalar, gravity, decay, ticks, drift});
+      const end = Date.now() + 450;
+      const rain = setInterval(() => {
+        confetti({
+          particleCount: 12, startVelocity: 45, gravity: 1.6, decay: 0.8, ticks: 70,
+          spread: 40, origin: { x: Math.random(), y: -0.1 }, colors
+        });
+        if (Date.now() > end) clearInterval(rain);
+      }, 60);
+    }
+
+    /* ===== Foto: cache-buster biar pasti berubah di HP ===== */
+    function withVersion(url, v){
+      try{ const u = new URL(url, location.href); u.searchParams.set('v', v); return u.toString(); }
+      catch(e){ return url + (url.includes('?')?'&':'?') + 'v=' + v; }
+    }
+    function showSlide(i){
+      const s = slides[i];
+      msg.textContent = s.text;
+      img1.classList.remove("show"); img2.classList.remove("show");
+      img1.src = ""; img2.src = "";
+      setTimeout(()=>{
+        img1.src = withVersion(s.photos[0], i);
+        img2.src = withVersion(s.photos[1], i);
+        requestAnimationFrame(()=>{ img1.classList.add("show"); img2.classList.add("show"); });
+      },20);
+    }
+
+    /* ===== Musik: auto-start pada interaksi pertama + kontrol ===== */
+    function ensureAudio(){
+      if(!audio){ audio = new Audio(SONG_SRC); audio.loop = true; }
+      if(!isPlaying){
+        audio.play().then(()=>{
+          isPlaying = true; musicPill.hidden = false;
+          musicText.textContent = "🎶 Musik diputar…";
+          musicToggle.textContent = "⏸️ Pause"; musicToggle.classList.add("pause");
+        }).catch(()=>{
+          musicPill.hidden = false; isPlaying = false;
+          musicText.textContent = "🔈 Ketuk untuk mulai musik";
+          musicToggle.textContent = "▶️ Play"; musicToggle.classList.remove("pause");
+        });
+      }
+    }
+    function toggleAudio(){
+      if(!audio){ ensureAudio(); return; }
+      if(isPlaying){
+        audio.pause(); isPlaying = false;
+        musicText.textContent = "🔇 Musik dijeda";
+        musicToggle.textContent = "▶️ Play"; musicToggle.classList.remove("pause");
+      }else{
+        audio.play(); isPlaying = true;
+        musicText.textContent = "🎶 Musik diputar…";
+        musicToggle.textContent = "⏸️ Pause"; musicToggle.classList.add("pause");
+      }
+    }
+    musicToggle.addEventListener("click", toggleAudio);
+    const startOnFirstInteraction = () => { ensureAudio(); window.removeEventListener('touchstart', startOnFirstInteraction); window.removeEventListener('click', startOnFirstInteraction); };
+    window.addEventListener('touchstart', startOnFirstInteraction, {once:false});
+    window.addEventListener('click', startOnFirstInteraction, {once:false});
+
+    /* ===== Afterparty ===== */
+    function spawnBalloon(){
+      const b = document.createElement("div");
+      b.className = "balloon";
+      b.style.left = (5 + Math.random()*90) + "vw";
+      b.style.animationDuration = (6 + Math.random()*5) + "s";
+      b.textContent = ["🎈","💙","💎","🌟"][Math.floor(Math.random()*4)];
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(), 12000);
+    }
+    function startAfterparty(){
+      if(afterpartyStarted) return;
+      afterpartyStarted = true;
+      setInterval(()=>confetti({
+        particleCount: 36, spread: 55, origin:{y:0.88},
+        colors: palettes[Math.floor(Math.random()*palettes.length)],
+        gravity: 1.15, decay: 0.86, ticks: 130
+      }), 5200);
+      setInterval(spawnBalloon, 1400);
+    }
+
+    /* ===== Klik tombol ===== */
     btn.addEventListener("click", () => {
-      // Confetti beruntun
-      let t = 0; for(let i=0;i<6;i++){ setTimeout(confettiBurst, t); t+=450; }
-      // Ubah teks & background
-      document.getElementById("subtext").textContent = "Semoga harimu penuh bahagia 💕";
-      document.body.classList.add("aurora");
-      // Reveal foto & buka modal
-      setTimeout(revealGallery, 250);
-      setTimeout(openModal, 600);
-      // Musik
-      playSong();
-      // Disable tombol
-      btn.disabled = true; btn.textContent = "✨ Selamat menikmati";
+      for(let k=0;k<4;k++) setTimeout(burstVariant, k*140);
+
+      if(idx === 0){ headline.textContent = "Untukmu 💙"; }
+      if(idx < slides.length){ showSlide(idx); idx++; }
+
+      if(idx >= slides.length){
+        btn.disabled = true; btn.textContent = "✨ Selesai";
+        setTimeout(()=>{
+          burstVariant();
+          headline.innerHTML = "<span class='glow'>🎉 HAPPY BIRTHDAY 🎉</span>";
+          startAfterparty();
+        }, 600);
+      }
     });
   </script>
 </body>
