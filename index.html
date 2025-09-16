@@ -283,3 +283,112 @@
         d.style.left = (25 + Math.random()*50) + '%';
         d.style.top  = (28 + Math.random()*32) + '%';
         d.style.opacity = (0.14 + Math.random()*0.22).toFixed(2);
+        d.style.setProperty('--dx', (Math.random()*10-5) + 'px');
+        d.style.setProperty('--dy', (Math.random()*10-5) + 'px');
+        d.style.setProperty('--dur', (10 + Math.random()*14) + 's');
+        wrap.appendChild(d);
+      }
+    }
+
+    function showSlide(i){
+      document.body.classList.remove('center-teaser');
+      const s=slides[i];
+      applyTheme(THEMES[s.theme]);
+      headline.textContent = "";
+      msg.textContent = s.text || "";
+      finale.style.display="none";
+      gallery.hidden = false;
+
+      img1.classList.remove("show"); img2.classList.remove("show");
+      setTimeout(()=>{ img1.src=s.photos[0]; img2.src=s.photos[1]; img1.classList.add("show"); img2.classList.add("show"); },20);
+
+      btn.textContent = "✨ Lanjut";
+      btn.disabled = false;
+      btn.classList.remove('bottom-fixed');
+      gallery.insertAdjacentElement('afterend', btn);
+      btn.style.display = "inline-block";
+    }
+
+    async function showFinale(){
+      applyTheme(THEMES.slide3);
+      gallery.hidden = true;
+      finale.style.display = "block";
+      headline.textContent = EVENT_DATE;
+      msg.textContent = "";
+      typeText.textContent = "";
+      nameText.textContent = "";
+      finaleVideo.classList.remove("show");   // << video
+
+      // muncul hiasan PERMANEN
+      showOrnamentsPersistent();
+
+      // sembunyikan tombol saat mengetik
+      btn.style.display = "none";
+
+      await typeWriter("HAPPY BIRTHDAY", typeText, 180);
+      typeText.classList.add('hb-shadow');
+      await new Promise(r=>setTimeout(r, 450));
+      await typeWriter(PERSON_NAME.toUpperCase(), nameText, 160);
+
+      const sparkleTimer = setInterval(()=>{ spawnSparkleAround(typeText); spawnSparkleAround(nameText); }, 120);
+      setTimeout(()=>clearInterval(sparkleTimer), 1800);
+      startEmojiRise();
+
+      // fade-in video
+      setTimeout(()=>finaleVideo.classList.add("show"), 300);
+
+      // tombol selesai di bawah
+      btn.textContent = "✨ Selesai";
+      btn.disabled = false;
+      btn.classList.add('bottom-fixed');
+      document.body.appendChild(btn);
+      btn.style.display = "inline-block";
+    }
+
+    /* Musik (punyamu) */
+    function ensureAudio(){
+      if(!audio){audio=new Audio(SONG_SRC);audio.loop=true;}
+      if(!isPlaying){
+        audio.play().then(()=>{
+          isPlaying=true; musicPill.hidden=false;
+          musicText.textContent="🎶 Musik diputar…";
+          musicToggle.textContent="⏸️ Pause"; musicToggle.classList.add("pause");
+        }).catch(()=>{
+          musicPill.hidden=false;
+          musicText.textContent="🔈 Ketuk untuk mulai musik";
+          musicToggle.textContent="▶️ Play"; musicToggle.classList.remove("pause");
+        });
+      }
+    }
+    function toggleAudio(){
+      if(!audio){ensureAudio();return;}
+      if(isPlaying){audio.pause();isPlaying=false;musicText.textContent="🔇 Musik dijeda";musicToggle.textContent="▶️ Play";musicToggle.classList.remove("pause");}
+      else{audio.play();isPlaying=true;musicText.textContent="🎶 Musik diputar…";musicToggle.textContent="⏸️ Pause";musicToggle.classList.add("pause");}
+    }
+    musicToggle.addEventListener("click",toggleAudio);
+    window.addEventListener('click',ensureAudio,{once:true});
+
+    /* Afterparty (punyamu) */
+    function startAfterparty(){
+      if(afterpartyStarted) return; afterpartyStarted=true;
+      setInterval(()=>{
+        confetti({
+          particleCount:42, spread:68, origin:{y:0.9},
+          colors:currentConfettiColors, gravity:1.1,
+          shapes:["text"], shapeOptions:{ text:{ value:["💙","🌸","⭐","✨"] } },
+          scalar:2
+        });
+      }, 4200);
+    }
+
+    /* Klik tombol – flow asli */
+    btn.addEventListener("click", async ()=>{
+      burstVariant();
+      if(idx === 0){ showSlide(0); idx = 1; return; }
+      if(idx === 1){ showSlide(1); idx = 2; return; }
+      if(idx === 2){ await showFinale(); startAfterparty(); idx = 3; return; }
+      if(idx >= 3){ location.reload(); }
+    });
+  </script>
+</body>
+</html>
