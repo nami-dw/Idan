@@ -11,16 +11,15 @@
 
   html,body{height:100%}
   body{
-    margin:0; padding:0 12px;
+    margin:0; padding:0 12px; overflow-x:hidden;
     font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,"Helvetica Neue",Arial;
     color:var(--txt); text-align:center;
     background: radial-gradient(circle at center,var(--base) 40%,#000 100%);
-    /* biar bisa digulir, tapi tetap kunci sumbu-X */
-    overflow-x:hidden; overflow-y:auto;
-    padding-bottom:84px;
+    overflow:auto; /* biar bisa digulir saat teks panjang */
+    padding-bottom:84px; /* ruang UI bawah */
   }
 
-  /* Aurora (punyamu) */
+  /* Aurora */
   body::before, body::after{
     content:""; position:fixed; inset:0; z-index:-2;
     background: conic-gradient(from 180deg at 50% 50%,
@@ -53,20 +52,16 @@
 
   h1#headline{margin:22px 0 8px;font-size:clamp(22px,6.5vw,44px);min-height:1.2em}
 
-  /* Pesan default (teaser) rata tengah */
-  #message{
-    margin:6px auto 10px;
-    font-size:clamp(14px,4.2vw,20px);
-    color:var(--muted);
-    min-height:1.5em;
-    text-align:center;
-  }
-  /* Saat slide 1/2: bikin rapi & nyaman dibaca */
-  #message.long{
+  /* Pesan default dipakai untuk teaser → rata tengah */
+  #message{margin:6px 0 10px;font-size:clamp(14px,4.2vw,20px);color:var(--muted);min-height:1.5em}
+
+  /* >>> Tambahan khusus slide supaya rapi (hanya aktif saat ada class .story) */
+  #message.story{
     max-width:680px;
+    margin: 12px auto 10px;
     text-align:justify;
     line-height:1.7;
-    white-space:pre-line; /* \n jadi paragraf */
+    white-space:pre-line; /* hormati \n jadi paragraf */
   }
 
   .btn{
@@ -79,16 +74,17 @@
   }
   .btn:disabled{opacity:.7}
 
-  /* Teaser di tengah (punyamu) */
+  /* Spasi aman biar gak nabrak pill musik di slide 1–2 */
+  .btn.space-bottom{ margin-bottom:120px; }
+
   .center-teaser #headline,
   .center-teaser #message,
   .center-teaser #surpriseBtn{ transform:translateY(32vh); }
 
-  /* Tombol fixed di bawah (untuk “Selesai”) */
   .bottom-fixed{ position:fixed; left:50%; transform:translateX(-50%);
     bottom:92px; z-index:6; }
 
-  /* Galeri 2 foto */
+  /* Galeri */
   .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px auto 22px;max-width:720px}
   .gallery img{width:100%;border-radius:14px;display:block;opacity:0;transform:scale(.96);
     transition:opacity .45s ease,transform .45s ease;box-shadow:0 10px 24px rgba(0,0,0,.35)}
@@ -119,25 +115,73 @@
   .finale-img{ margin-top:12px; max-width:90%; border-radius:16px; box-shadow:0 10px 28px rgba(0,0,0,.45); opacity:0; transform:translateY(6px); transition:opacity .5s ease, transform .5s ease; }
   .finale-img.show{ opacity:1; transform:translateY(0) }
 
-  /* Hiasan permanen + shadow judul */
-  #finale{ position:relative; }
   #ornaments{ position:absolute; inset:0; z-index:0; pointer-events:none; }
-  .orn{
-    position:absolute; font-size:clamp(18px,5vw,30px); opacity:.18;
+  .orn{ position:absolute; font-size:clamp(18px,5vw,30px); opacity:.18;
     filter:drop-shadow(0 0 6px rgba(255,255,255,.18));
     transform:translate(-50%,-50%);
-    animation: drift var(--dur,12s) ease-in-out infinite alternate; will-change: transform;
-  }
+    animation: drift var(--dur,12s) ease-in-out infinite alternate;
+    will-change: transform; }
   @keyframes drift{
     from{ transform:translate(calc(-50% + var(--dx,0px)), calc(-50% + var(--dy,0px))) rotate(0deg); }
     to{   transform:translate(calc(-50% + var(--dx,6px)),  calc(-50% + var(--dy,-10px))) rotate(6deg); }
   }
+
   .hb-shadow{
-    text-shadow:
-      0 1px 0 rgba(255,255,255,.35),
-      0 10px 28px rgba(0,0,0,.35),
-      0 2px 12px rgba(56,189,248,.22);
+    text-shadow: 0 1px 0 rgba(255,255,255,.35),
+                 0 10px 28px rgba(0,0,0,.35),
+                 0 2px 12px rgba(56,189,248,.22);
   }
+  /* Efek glowing khusus untuk HAPPY BIRTHDAY */
+.glow {
+  animation: glowPulse 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+  from {
+    text-shadow: 
+      0 0 1px #fff,
+      0 0 4px rgba(56,189,248,0.6),
+      0 0 6px rgba(14,165,233,0.5);
+  }
+  to {
+    text-shadow: 
+      0 0 2px #fff,
+      0 0 8px rgba(56,189,248,0.7),
+      0 0 12px rgba(14,165,233,0.6);
+  }
+}
+/* Glow kuning untuk Nama */
+.name-glow {
+  animation: nameGlow 2.5s ease-in-out infinite alternate;
+}
+@keyframes nameGlow {
+  from {
+    text-shadow: 
+      0 0 6px #fff,
+      0 0 12px #fde047,
+      0 0 22px #facc15,
+      0 0 34px #eab308;
+  }
+  to {
+    text-shadow: 
+      0 0 10px #fff,
+      0 0 20px #fde047,
+      0 0 35px #facc15,
+      0 0 50px #ca8a04;
+  }
+}
+#finale {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* semua isi #finale rata tengah */
+  justify-content: flex-start;
+}
+#typeText, 
+#nameText {
+  text-align: center;
+  width: 100%;
+}
 </style>
 </head>
 <body class="center-teaser">
@@ -159,7 +203,6 @@
     <div id="typeText" class="type"></div>
     <div id="nameText" class="name"></div>
     <footer>Dari aku, untukmu 💙</footer>
-    <!-- Video dengan kontrol -->
     <video id="finaleVideo" class="finale-img" src="./videos/spesial.mp4" controls muted playsinline></video>
   </div>
 
@@ -171,9 +214,9 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
     /* ====== SET INI AJA ====== */
-    const PERSON_NAME = "Fathir Risky Ramadhan"; // GANTI
-    const SONG_SRC = "lagu.mp3";                  // GANTI
-    const EVENT_DATE = "20 September 2025";       // tampil di SLIDE 3
+    const PERSON_NAME = "Fathir Risky Ramadhan";  // GANTI
+    const SONG_SRC = "lagu.mp3";                   // GANTI
+    const EVENT_DATE = "20 September 2025";        // tampil di SLIDE 3
     const slides = [
       { text:
 `Hai, terima kasih yaa untuk beberapa bulan ini. Jujur aku senang banget bisa kenal kamu. Sama kamu, aku merasakan hal-hal baru sampai bikin aku mikir, 'ada ya cowok kayak gini.' meski pada akhirnya, berujung kecewa juga.
@@ -184,12 +227,11 @@ Aku sama sekali gak pernah punya niatan buat ninggalin kamu. Tapi karena teringa
 
 Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang buat nemenin, buat nyayangin kamu, bukan karena benar-benar pengen sama aku? Karena pada akhirnya, rasa sepi itu bisa kamu isi sama orang lain juga.`,
         photos:["./images/foto1.jpg","./images/foto2.jpg"], theme:"slide1" },
-      { text:"Ciee sekarang sudah 17 tahun. Semoga semakin dewasa yaa, lucunya jangan hilang, tetap ceria jangan nangis mulu, bikin capek. Semangat!!! Semoga harimu selalu indah ❤️ ",
-        photos:["./images/foto3.jpg","./images/foto4.jpg"], theme:"slide2" },
+      { text:"Ciee sekarang sudah 17 tahun. Semoga semakin dewasa yaa, lucunya jangan hilang, tetap ceria jangan nangis mulu, bikin capek. Semangat!!! Semoga harimu selalu indah ❤️ ", photos:["./images/foto3.jpg","./images/foto4.jpg"], theme:"slide2" },
       { text:"", photos:[], theme:"slide3", finale:true }
     ];
 
-    /* Tema + palet confetti */
+    /* Tema aurora + palet confetti */
     const THEMES = {
       teaser:{ base:"#050517",
         c1:"rgba(129,140,248,0.30)", c2:"rgba(59,130,246,0.28)", c3:"rgba(67,56,202,0.28)", c4:"rgba(99,102,241,0.26)",
@@ -232,7 +274,7 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
     }
     applyTheme(THEMES.teaser);
 
-    /* Confetti rame */
+    /* Confetti */
     function burstVariant(){
       const colors=currentConfettiColors;
       const base={gravity:1.0,decay:0.9,ticks:200,scalar:1.3,startVelocity:80};
@@ -274,7 +316,6 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
       }, 260);
     }
 
-    /* typewriter */
     async function typeWriter(str, el, speed=170){
       el.classList.remove('done'); el.textContent="";
       for (let i=0;i<str.length;i++){
@@ -285,10 +326,8 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
       el.classList.add('done');
     }
 
-    /* Hiasan permanen */
     function showOrnamentsPersistent(){
       const wrap = document.getElementById('ornaments');
-      wrap.innerHTML="";
       const symbols = ["✦","✧","❇︎","❈","✺","✳︎"];
       for(let i=0;i<22;i++){
         const d = document.createElement('div');
@@ -304,55 +343,53 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
       }
     }
 
-    /* Slide 1/2 */
     function showSlide(i){
       document.body.classList.remove('center-teaser');
       const s=slides[i];
       applyTheme(THEMES[s.theme]);
-
       headline.textContent = "";
       msg.textContent = s.text || "";
-      msg.classList.add('long');        // rapi & bisa digulir
-
+      msg.classList.add('story');          // <<< teks rapi khusus slide
       finale.style.display="none";
       gallery.hidden = false;
 
       img1.classList.remove("show"); img2.classList.remove("show");
-      setTimeout(()=>{
-        img1.src=s.photos[0]||""; img2.src=s.photos[1]||"";
-        img1.classList.add("show"); img2.classList.add("show");
-      },20);
-
-      // tombol HARUS di bawah galeri
-      gallery.insertAdjacentElement('afterend', btn);
+      setTimeout(()=>{ img1.src=s.photos[0]; img2.src=s.photos[1]; img1.classList.add("show"); img2.classList.add("show"); },20);
 
       btn.textContent = "✨ Lanjut";
       btn.disabled = false;
       btn.classList.remove('bottom-fixed');
-
-      // scroll ke atas tiap pindah slide
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      btn.classList.add('space-bottom');   // spasi aman dari musik
+      gallery.insertAdjacentElement('afterend', btn);
+      btn.style.display = "inline-block";
+      window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    /* Finale */
     async function showFinale(){
       applyTheme(THEMES.slide3);
-      msg.classList.remove('long');     // kembali ke gaya teaser
       gallery.hidden = true;
       finale.style.display = "block";
       headline.textContent = EVENT_DATE;
       msg.textContent = "";
+      msg.classList.remove('story');       // <<< kembali ke mode teaser/finale
       typeText.textContent = "";
       nameText.textContent = "";
       finaleVideo.classList.remove("show");
 
       showOrnamentsPersistent();
+
       btn.style.display = "none";
+      btn.classList.remove('space-bottom');
 
       await typeWriter("HAPPY BIRTHDAY", typeText, 180);
-      typeText.classList.add('hb-shadow');
-      await new Promise(r=>setTimeout(r, 450));
-      await typeWriter(PERSON_NAME.toUpperCase(), nameText, 160);
+typeText.classList.add('glow');   // << efek glowing
+typeText.classList.add('hb-glow');   // glowing biru khusus HB
+
+await new Promise(r=>setTimeout(r, 450));
+
+// biarin nama normal (capital cuma awal kata)
+await typeWriter(PERSON_NAME, nameText, 160);
+nameText.classList.add('name-glow'); // glowing kuning khusus Nama
 
       const sparkleTimer = setInterval(()=>{ spawnSparkleAround(typeText); spawnSparkleAround(nameText); }, 120);
       setTimeout(()=>clearInterval(sparkleTimer), 1800);
@@ -365,8 +402,7 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
       btn.classList.add('bottom-fixed');
       document.body.appendChild(btn);
       btn.style.display = "inline-block";
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({top:0, behavior:'smooth'});
     }
 
     /* Musik */
@@ -405,18 +441,14 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
       }, 4200);
     }
 
-    /* Klik tombol – flow */
-    const THEMES_KEYS = THEMES; // no-op, menjaga strukturmu
-    let current = 0;
-    const btnEl = btn;
-
+    /* Klik tombol – flow asli */
     btn.addEventListener("click", async ()=>{
       burstVariant();
-      if(current === 0){ showSlide(0); current = 1; return; }
-      if(current === 1){ showSlide(1); current = 2; return; }
-      if(current === 2){ await showFinale(); startAfterparty(); current = 3; return; }
-      if(current >= 3){ location.reload(); }
+      if(idx === 0){ showSlide(0); idx = 1; return; }
+      if(idx === 1){ showSlide(1); idx = 2; return; }
+      if(idx === 2){ await showFinale(); startAfterparty(); idx = 3; return; }
+      if(idx >= 3){ location.reload(); }
     });
   </script>
 </body>
-  </html>
+</html>
