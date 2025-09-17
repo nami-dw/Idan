@@ -182,6 +182,39 @@
   text-align: center;
   width: 100%;
 }
+/* Ornaments = background di dalam finale */
+#ornaments {
+  position: absolute;
+  inset: 0;
+  z-index: 0;    /* layer paling bawah */
+  pointer-events: none;
+}
+
+/* Teks dan footer = di atas ornaments */
+#typeText,
+#nameText,
+#finale footer {
+  position: relative;
+  z-index: 2;
+}
+
+/* Video = di tengah (antara ornaments & teks) */
+.finale-img {
+  position: relative;
+  z-index: 1;
+}
+/* Hidden message di akhir */
+#hiddenMsg{
+  margin:14px auto 0;
+  max-width:680px;
+  font-size:clamp(14px,4vw,18px);
+  font-style:italic;
+  color:#eaf6ff;
+  opacity:0;
+  transition: opacity .8s ease;
+}
+#hiddenMsg.show{ opacity:1 }
+
 </style>
 </head>
 <body class="center-teaser">
@@ -204,6 +237,7 @@
     <div id="nameText" class="name"></div>
     <footer>Dari aku, untukmu 💙</footer>
     <video id="finaleVideo" class="finale-img" src="./videos/spesial.mp4" controls muted playsinline></video>
+    <p id="hiddenMsg" aria-hidden="true"></p>
   </div>
 
   <div class="pill" id="musicPill" hidden>
@@ -217,7 +251,8 @@
     const PERSON_NAME = "Fathir Risky Ramadhan";  // GANTI
     const SONG_SRC = "lagu.mp3";                   // GANTI
     const EVENT_DATE = "20 September 2025";        // tampil di SLIDE 3
-    const slides = [
+   const ENDING_SONG_SRC = "./music/ending.mp3";  // musik penutup
+   const slides = [
       { text:
 `Hai, terima kasih yaa untuk beberapa bulan ini. Jujur aku senang banget bisa kenal kamu. Sama kamu, aku merasakan hal-hal baru sampai bikin aku mikir, 'ada ya cowok kayak gini.' meski pada akhirnya, berujung kecewa juga.
 
@@ -260,9 +295,11 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
     const nameText=document.getElementById("nameText");
     const finaleVideo=document.getElementById("finaleVideo");
     const musicPill=document.getElementById("musicPill");
+    const hiddenMsg = document.getElementById("hiddenMsg");
     const musicText=document.getElementById("musicText");
     const musicToggle=document.getElementById("musicToggle");
     let audio,isPlaying=false;
+    let endingAudio;
 
     function applyTheme(theme){
       document.body.style.setProperty('--base',theme.base);
@@ -427,27 +464,101 @@ nameText.classList.add('name-glow'); // glowing kuning khusus Nama
     }
     musicToggle.addEventListener("click",toggleAudio);
     window.addEventListener('click',ensureAudio,{once:true});
+    
+function fadeAudioOut(duration=1500){
+  if(!audio || !isPlaying){
+    return Promise.resolve();
+  }
+  return new Promise(resolve=>{
+    const steps = 30;
+    const stepTime = duration / steps;
+    const startVol = (typeof audio.volume === "number" ? audio.volume : 1);
+    let i = 0;
+    const t = setInterval(()=>{
+      i++;
+      audio.volume = Math.max(0, startVol * (1 - i/steps));
+      if(i >= steps){
+        clearInterval(t);
+        audio.pause();
+        isPlaying = false;
+        audio.currentTime = 0;
+        audio.volume = startVol; // reset buat next play
+        musicText.textContent = "🔇 Musik selesai";
+        musicToggle.textContent = "▶️ Play";
+        musicToggle.classList.remove("pause");
+        resolve();
+      }
+    }, stepTime);
+  });
+}
+
+function playEndingAudio(){
+  if(!endingAudio){
+    endingAudio = new Audio(ENDING_SONG_SRC);
+  }
+  endingAudio.currentTime = 0;
+  endingAudio.volume = 0.9;
+  endingAudio.play().catch(err=>{
+    console.warn("Ending music blocked:", err);
+  });
+}
+
+let endingShown = false; // guard biar gak dobel
+
+finaleVideo.addEventListener('ended', async ()=>{
+  if(endingShown) return;
+  endingShown = true;
+  await fadeAudioOut(1600);
+  playEndingAudio(); // musik penutup
+  hiddenMsg.textContent = "Aku selalu doakan yang terbaik buat kamu 💫";
+  hiddenMsg.classList.add("show");
+  btn.textContent = "Putar lagi 🎵";
+  btn.disabled = false;
+  idx = 4; // state replay
+});
 
     /* Afterparty */
     function startAfterparty(){
-      if(afterpartyStarted) return; afterpartyStarted=true;
-      setInterval(()=>{
-        confetti({
-          particleCount:42, spread:68, origin:{y:0.9},
-          colors:currentConfettiColors, gravity:1.1,
-          shapes:["text"], shapeOptions:{ text:{ value:["💙","🎈","🥳","✨"] } },
-          scalar:2
-        });
-      }, 4200);
-    }
+  if(afterpartyStarted) return; 
+  afterpartyStarted = true;
+
+  setInterval(()=>{
+    const e = document.createElement("div");
+    e.className = "rise"; 
+    e.textContent = ["💙","🎈","🥳","✨","⭐","🎂"][Math.floor(Math.random()*6)];
+    e.style.left = (5 + Math.random()*90) + "vw";
+    e.style.fontSize = (24 + Math.random()*20) + "px";
+    e.style.animationDuration = (5 + Math.random()*6) + "s";
+    document.body.appendChild(e);
+
+    setTimeout(()=>e.remove(), 12000); // hapus biar gak numpuk
+  }, 2500); // tiap 2.5 detik keluar emoji baru
+}
 
     /* Klik tombol – flow asli */
     btn.addEventListener("click", async ()=>{
       burstVariant();
       if(idx === 0){ showSlide(0); idx = 1; return; }
       if(idx === 1){ showSlide(1); idx = 2; return; }
-      if(idx === 2){ await showFinale(); startAfterparty(); idx = 3; return; }
-      if(idx >= 3){ location.reload(); }
+      if(idx === 2){ await showFinale(); /* no afterparty (confetti dimatikan) */ idx = 3; return; }
+      if(idx === 3){
+  // Tekan "✨ Selesai" → fade out musik utama + play musik penutup + tampilkan hidden message
+  btn.disabled = true;
+  (async () => {
+    await fadeAudioOut(1600);
+    playEndingAudio(); // <<< musik penutup mulai
+    hiddenMsg.innerHTML = "Aku selalu doakan yang terbaik buat kamu 💫 <br>Aku nggak bisa janji apa-apa, cuma pengen kamu bahagia 🫶";
+    hiddenMsg.classList.add("show");
+    btn.textContent = "Putar lagi 🎵"; 
+    btn.disabled = false;
+    idx = 4;
+    endingShown = true;
+  })();
+  return;
+}
+if(idx >= 4){
+  location.reload(); // replay full flow
+}
     });
   </script>
 </body>
