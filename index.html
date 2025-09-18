@@ -276,13 +276,32 @@
       0 0 55px #db2777;
   }
 }
-  
+  /* Layer khusus untuk semua emoji (naik & jatuh) */
+#emojiLayer{
+  position: fixed;
+  inset: 0;            /* full screen, nempel semua sisi */
+  z-index: 0;          /* di belakang video & teks */
+  pointer-events: none;
+  background: transparent; /* jangan ada warna biar nyatu dengan background */
+}
+
+/* Emoji-emoji-nya */
+.rise,
+.fall{
+  position: absolute;  /* posisinya relatif ke layar (#emojiLayer) */
+  pointer-events: none;
+  /* jangan set z-index di sini—biarkan ikut layer #emojiLayer */
+}
+
+/* Pastikan konten finale di atas emoji */
+#finale{ position: relative; z-index: 2; }
+.finale-img{ position: relative; z-index: 1; }  /* video */
 
 </style>
 </head>
 <body class="center-teaser">
   <div class="stars"></div>
-
+<div id="emojiLayer" aria-hidden="true"></div> <!-- wadah emoji -->
   <h1 id="headline">Psst… ada sesuatu buat kamu 😉</h1>
   <p id="message">Tap tombol di bawah untuk mulai</p>
 
@@ -310,11 +329,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
+    
     /* ====== SET INI AJA ====== */
     const PERSON_NAME = "Fathir Risky Ramadhan";  // GANTI
     const SONG_SRC = "lagu.mp3";                   // GANTI
     const EVENT_DATE = "20 September 2025";        // tampil di SLIDE 3
    const ENDING_SONG_SRC = "ending.mp3";  // musik penutup
+    const emojiLayer = document.getElementById('emojiLayer');
    const slides = [
       { text:
 `Hai, terima kasih yaa untuk beberapa bulan ini. Jujur aku senang banget bisa kenal kamu. Sama kamu, aku bisa merasakan hal-hal baru sampai bikin aku mikir, 'ada ya cowok kayak gini.' meski pada akhirnya, berujung kecewa juga.
@@ -411,7 +432,7 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
         e.textContent = ["💙","🎈","🎂","⭐","🥳","🎈"][Math.floor(Math.random()*6)];
         e.style.left = (5 + Math.random()*90) + "vw";
         e.style.animationDuration = (5 + Math.random()*4) + "s";
-        document.body.appendChild(e);
+        emojiLayer.appendChild(e);
         setTimeout(()=>e.remove(), 10000);
       }, 260);
     }
@@ -434,7 +455,7 @@ function startEmojiFall(){
     e.style.left = (5 + Math.random()*90) + "vw";
     e.style.fontSize = (22 + Math.random()*14) + "px";
     e.style.animationDuration = (4 + Math.random()*3) + "s";
-    document.body.appendChild(e);
+    emojiLayer.appendChild(e);
 
     /* NOTE:
        Kamu minta "jangan hilang", jadi gak di-remove.
