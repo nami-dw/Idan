@@ -218,6 +218,21 @@
   background: linear-gradient(135deg, #1e3a8a, #0f172a);
   transition: background 1.5s ease;
   }
+  /* Emoji jatuh khusus pesan rahasia */
+.fall{
+  position:fixed;
+  top:-40px;
+  pointer-events:none;
+  font-size:28px;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));
+  animation:fallDown linear forwards;
+}
+@keyframes fallDown{
+  to{
+    transform:translateY(120vh) rotate(18deg);
+    opacity:1; /* biar tetap terlihat, tidak fade-out */
+  }
+}
   /* Default: Golden Glow */
 .name-glow {
   animation: goldGlow 2.5s ease-in-out infinite alternate;
@@ -261,6 +276,7 @@
       0 0 55px #db2777;
   }
 }
+  
 
 </style>
 </head>
@@ -399,6 +415,40 @@ Rasa kesepianmu juga bikin aku mikir: apa sebenarnya kamu cuma butuh seseorang b
         setTimeout(()=>e.remove(), 10000);
       }, 260);
     }
+    /* Hentikan emoji naik (finale) */
+function stopEmojiRise(){
+  if(emojiInterval){
+    clearInterval(emojiInterval);
+    emojiInterval = null;
+  }
+}
+
+/* Hujan emoji jatuh berkelanjutan */
+let fallInterval = null;
+function startEmojiFall(){
+  if(fallInterval) return; // cegah dobel
+  fallInterval = setInterval(()=>{
+    const e = document.createElement("div");
+    e.className = "fall";
+    e.textContent = ["💙","🎈","⭐","💕","🥳","🎂"][Math.floor(Math.random()*6)];
+    e.style.left = (5 + Math.random()*90) + "vw";
+    e.style.fontSize = (22 + Math.random()*14) + "px";
+    e.style.animationDuration = (4 + Math.random()*3) + "s";
+    document.body.appendChild(e);
+
+    /* NOTE:
+       Kamu minta "jangan hilang", jadi gak di-remove.
+       Kalau mulai berat, aktifkan baris di bawah utk menghapus setelah lewat layar:
+       setTimeout(()=>e.remove(), 8000);
+    */
+  }, 420); // kecepatannya: 1 emoji tiap ~0.42 detik
+}
+function stopEmojiFall(){
+  if(fallInterval){
+    clearInterval(fallInterval);
+    fallInterval = null;
+  }
+}
 
     async function typeWriter(str, el, speed=170){
       el.classList.remove('done'); el.textContent="";
@@ -596,6 +646,8 @@ finaleVideo.addEventListener('ended', async ()=>{
     playEndingAudio(); // <<< musik penutup mulai
     hiddenMsg.innerHTML = "Semoga segala hal baik selalu sampai ke kamu 💫 <br>Aku nggak janji apa-apa, tapi aku beneran pengen kamu bahagia 🫶";
     hiddenMsg.classList.add("show");
+    stopEmojiRise();
+startEmojiFall();
     nameText.classList.remove("name-glow");
 nameText.classList.add("name-secret");
     document.body.classList.add("secret-mode");
