@@ -214,6 +214,53 @@
   transition: opacity .8s ease;
 }
 #hiddenMsg.show{ opacity:1 }
+  body.secret-mode {
+  background: linear-gradient(135deg, #1e3a8a, #0f172a);
+  transition: background 1.5s ease;
+  }
+  /* Default: Golden Glow */
+.name-glow {
+  animation: goldGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes goldGlow {
+  from {
+    text-shadow: 
+      0 0 6px #fff,
+      0 0 12px #fde047,
+      0 0 22px #facc15,
+      0 0 34px #eab308;
+  }
+  to {
+    text-shadow: 
+      0 0 10px #fff,
+      0 0 20px #fde047,
+      0 0 35px #facc15,
+      0 0 50px #ca8a04;
+  }
+}
+
+/* Mode rahasia: Pink Glow */
+.name-secret {
+  animation: pinkGlow 2.5s ease-in-out infinite alternate !important;
+}
+
+@keyframes pinkGlow {
+  from {
+    text-shadow: 
+      0 0 6px #fff,
+      0 0 14px #f9a8d4,
+      0 0 24px #ec4899,
+      0 0 38px #db2777;
+  }
+  to {
+    text-shadow: 
+      0 0 10px #fff,
+      0 0 22px #f9a8d4,
+      0 0 35px #ec4899,
+      0 0 55px #db2777;
+  }
+}
 
 </style>
 </head>
@@ -549,6 +596,9 @@ finaleVideo.addEventListener('ended', async ()=>{
     playEndingAudio(); // <<< musik penutup mulai
     hiddenMsg.innerHTML = "Semoga segala hal baik selalu sampai ke kamu 💫 <br>Aku nggak janji apa-apa, tapi aku beneran pengen kamu bahagia 🫶";
     hiddenMsg.classList.add("show");
+    nameText.classList.remove("name-glow");
+nameText.classList.add("name-secret");
+    document.body.classList.add("secret-mode");
     btn.textContent = "Putar lagi 🎵"; 
     btn.disabled = false;
     idx = 4;
